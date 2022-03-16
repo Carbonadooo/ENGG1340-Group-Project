@@ -1,4 +1,7 @@
 # ENGG1340-Group-Project
-Identification of the team members.
-A description of your game and introduce the game rules.
+# Identification of the team members:
+# Zeng Shao Yu 3035845851
+# Fan Yi An 
+# Description:
+# Rule:
 A list of features that you plan to implement, and explain how each coding element from 1 to 5 listed under the coding requirements aforementioned have supported your features.
