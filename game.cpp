@@ -5,6 +5,8 @@
 #include<conio.h>
 #include<vector>
 #include<fstream>
+#include<cstdlib>
+#include<ctime>
 using namespace std;
 
 //64*24 size
@@ -36,8 +38,22 @@ void frontPage() {
 	cout << endl;
 }
 
+
 struct Ability {
 	int Damage, Power, Heal;
+};
+
+class Room {
+public:
+	char type = 'N';
+	int x, y;
+	Ability ability;
+
+};
+
+class Monster {
+public:
+	int HP, Damage, Power;
 };
 
 class Hero {
@@ -64,6 +80,32 @@ char GetOption() {
 	return key;
 }
 
+void generateMap(Room map[10][], int level) {
+	int tot = 8 + 2 * level;
+	int x = 4, y = 4;
+	map[x][y].type = '0';//birthplace
+
+	while (tot) {
+		if (map[x][y].type == 'N') {
+			srand(time(NULL));
+			int dx = 0, dy = 0;
+			if (rand() % 2) dx = (rand() % 2) ? -1 : 1;
+			else dy = (rand() % 2) ? -1 : 1;
+			while (0 <= x + dx && x + dx < 10 && 0 <= y + dy && y + dy < 10) {
+				x += dx; y += dy;
+				if (map[x][y].type != 'N') continue;
+				else {
+					int t = rand()%
+						//ability(),heal,monster1,monster2,boss(final one)
+					map[x][y].type = 'A';
+
+				}
+			}
+
+		}
+	}
+}
+
 int main() {
 	Hero Ian;//The Hero of the game
 	frontPage();
@@ -82,8 +124,9 @@ int main() {
 	}
 	system("cls");
 	if (fin.fail()) { cout << "error"; exit(1); }
-	string item;
-	fin >> item; cout << item;
-	//cout << Ian.HP << Ian.Damage << Ian.Power << endl;
+	for (int level = 1; level < 6; ++level) {
+		Room map[10][10];
+		generateMap(map, level);
+	}
 	return 0;
 }
