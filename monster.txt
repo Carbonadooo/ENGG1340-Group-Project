@@ -1,0 +1,13 @@
+Zombie  20 3 NA NA
+ghoul 15 3 NA NA
+Skeleton 15 8 NA NA
+Webspinner 1 8 NA NA
+Hyena 10 8 NA NA
+Cobra 5 1 Toxicosis NA
+Assassin 8 15 NA freezed
+Magician 10 6 NA NA
+Felhound 25 5 weakened NA
+Worgen 30 5 Bleeding Enraged
+Vampire 20 3 weakened healed
+PitLord 100 20 NA freezed
+VoidTerror 80 10 Toxicosis Enraged
