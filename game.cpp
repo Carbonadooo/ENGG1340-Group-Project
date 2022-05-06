@@ -7,6 +7,7 @@
 #include<fstream>
 #include<cstdlib>
 #include<ctime>
+#include<map>
 using namespace std;
 
 //64*24 size
@@ -38,9 +39,14 @@ void frontPage() {
 	cout << endl;
 }
 
+struct Ability{
+    int damage, heal, mana, number;
+    string Peff, Eeff;
+};
 
-struct Ability {
-	int Damage, Power, Heal;
+struct monster{
+    int HP, ATK;
+    string Peff, Eeff;
 };
 
 class Room {
@@ -51,24 +57,45 @@ public:
 
 };
 
-class Monster {
-public:
-	int HP, Damage, Power;
-};
+
+map<string, monster> enemy;  //store enemy's data
+
 
 class Hero {
 	public:
-		int HP, Damage, Power;
-		vector<Ability> abililty;
-		void Update(ifstream fin) {
-			string item;
-			while (fin >> item) {
-				if (item == "HP") fin >> HP;
-				if (item == "Damage") fin >> Damage;
-				if (item == "Power") fin >> Power;
-			}
-		}
+		int HP, ATK;
+		map<string, Ability> skills; //store player's ablity
 };
+
+void imp(Hero &Ian){//import data
+    Ability tempSkill;
+    monster tempMonster;
+    string tName;
+    ifstream fin;
+    fin.open("ability.txt", ios::in); //import abilities from the files
+    if ( fin.fail() ){
+        cout << "Error in file opening!" << endl;
+        exit(1);
+    }
+    while(fin >> tName){
+        fin  >> tempSkill.damage >> tempSkill.heal >> tempSkill.mana;
+        fin >> tempSkill.Peff >> tempSkill.Eeff >> tempSkill.number;
+        Ian.skills[tName] = tempSkill;
+    }
+    fin.close();
+
+        fin.open("monster.txt", ios::in); //import monsters from the files
+    if ( fin.fail() ){
+        cout << "Error in file opening!" << endl;
+        exit(1);
+    }
+    while(fin >> tName){
+        fin  >> tempMonster.HP >> tempMonster.ATK >> tempMonster.Peff >> tempMonster.Eeff;
+        enemy[tName] = tempMonster;
+    }
+    fin.close();
+}
+
 
 char GetOption() {
 	cout << "Enter number to make choice: " << endl;
