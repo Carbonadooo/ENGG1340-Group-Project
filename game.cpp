@@ -40,13 +40,13 @@ void frontPage() {
 }
 
 struct Ability{
-    int damage, heal, mana, number;
-    string Peff, Eeff;
+    int damage, heal, mana, number; // mana: the cost of the skills
+    string Peff, Eeff; // the skills that will have some effect on Player or Enemy (Player's effect and Enemy's effect)
 };
 
 struct monster{
-    int HP, ATK;
-    string Peff, Eeff;
+    int HP, ATK; 
+    string Peff, Eeff; //if player was attacted by the enemy, it will have some effect on Player or Enemy (Player's effect and Enemy's effect)
 };
 
 class Room {
@@ -150,6 +150,7 @@ int main() {
 		fin.open("PlayerArchive.txt");//read the player archive
 	}
 	system("cls");
+	imp(Ian)
 	if (fin.fail()) { cout << "error"; exit(1); }
 	for (int level = 1; level < 6; ++level) {
 		Room map[10][10];
