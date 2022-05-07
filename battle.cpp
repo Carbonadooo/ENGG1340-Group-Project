@@ -127,6 +127,7 @@ bool battle(Hero& Ian, bool boss, string Curskills[4]) { //return 0: player died
 					if (PP[2] != 0) { cout << "3 to use " << setw(19) << Curskills[2] << "  PP: " << PP[2] << endl; }
 					if (PP[3] != 0) { cout << "4 to use " << setw(19) << Curskills[3] << "  PP: " << PP[3] << endl; }
 					cout << "Tips: PP is how many times you can use the skills in the battle" << endl;
+					input = _getch();
 				}
 				if (PP[input - 49] > 0) {// player turn
 					system("clear");
