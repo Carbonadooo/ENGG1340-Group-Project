@@ -18,10 +18,10 @@ int _getch(void)
     cfmakeraw(&tm);
     if (tcsetattr(fd, TCSANOW, &tm) < 0) return -1;
 
-    char = getchar();
+    chr = getchar();
     if (tcsetattr(fd, TCSANOW, &tm_old) < 0) return -1;
 
-    return char;
+    return chr;
 }
 using namespace std;
 
