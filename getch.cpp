@@ -1,5 +1,6 @@
 #include"getch.h"
 #include<iostream>
+#include<unistd.h>
 using namespace std;
 
 int _getch(void)
