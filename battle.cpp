@@ -102,7 +102,7 @@ bool battle(Hero& Ian, bool boss, string Curskills[4],map<string, Ability> skill
 				system("clear");
 				cout << "\n\n\t\tYou lose the battle because all the PP are used up" << endl;
 				sleep(5);
-				cout << "\n\n\n\t\t                game over!" 
+				cout << "\n\n\n\t\t                game over!" ;
 				sleep(5);
 				return 0;
 			}
