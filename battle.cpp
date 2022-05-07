@@ -3,7 +3,6 @@
 #include <string>
 #include "battle.h"
 #include <map>
-#include<conio.h>
 #include "structures.h"
 #include <unistd.h>
 #include <termio.h>
