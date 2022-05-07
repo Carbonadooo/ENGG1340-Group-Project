@@ -9,7 +9,25 @@
 #include<map>
 #include<algorithm>
 #include<unistd.h>
+#include <termio.h>
 using namespace std;
+
+int getch(void)
+{
+    struct termios tm, tm_old;
+    int fd = 0, char;
+
+    if (tcgetattr(fd, &tm) < 0) return -1;
+
+    tm_old = tm;
+    cfmakeraw(&tm);
+    if (tcsetattr(fd, TCSANOW, &tm) < 0) return -1;
+
+    char = getchar();
+    if (tcsetattr(fd, TCSANOW, &tm_old) < 0) return -1;
+
+    return char;
+}
 
 //64*24 size
 void frontPage() {
