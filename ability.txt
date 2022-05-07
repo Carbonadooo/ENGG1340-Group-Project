@@ -1,13 +1,12 @@
-Fireblast 5 0 2 NA NA 999
-Fireball 15 0 4 NA NA 0
-Revive 0 100 10 NA NA 0
-SiphonSoul 5 15 3 Enraged weakened 0
-ForbiddenRitual 50 -15 6 weakened NA  0
-Blizzard 5 0 5 NA freezed 0
-Hypnotize 0 0 2 NA freezed 0
-ArmorUP! 0 5 2 NA NA 999
-Slam 8 0 2 NA weakened 0
-InnerRage 0 0 0 Enraged NA 0
-MortalStrike 70 0 10 freezed NA 0
-Crush 50 0 8 weakened NA 0
-Rally 0 30 5 Enraged NA 0
+Fireblast 8 0 999 NA NA 1
+Fireball 15 0 10 NA NA 2
+Revive 0 12 20 healed NA 3
+SiphonSoul 5 8 10 Enraged weakened 4
+ForbiddenRitual 50 -15 5 weakened NA  5
+Blizzard 5 0 8 NA freezed 6
+Hypnotize 0 0 2 NA freezed 7
+Slam 8 0 2 NA weakened 8
+InnerRage 0 0 999 Enraged NA 9
+MortalStrike 70  -15 3 freezed NA 0
+Crush 50 0 3 weakened NA -
+Rally 0 30 10 Enraged NA 0 =
