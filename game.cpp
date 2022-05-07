@@ -409,14 +409,14 @@ void changeSkills(string a[4], Hero Ian) {
 	sleep(3);
 }
 
-bool battle(Hero& Ian, bool boss, string Curskills[4]) { //return 0: player died, return 1: player won
+bool battle(Hero& Ian, bool boss, string Curskills[4],map<string, Ability> skills ,map<string, Monster> enemy ) { //return 0: player died, return 1: player won
 	srand(time(NULL));
 	int PP[4];
 	for (int i = 0; i < 4; i++) {
 		if (Curskills[i] != "NA") {
 			PP[i] = skills[Curskills[i]].mana;
 		}
-		else { PP[i] = 0; }
+		else { PP[i] = 0;}
 
 	}// import/refresh the mana(how many times can be used)
 	map<string, int> stateP; //player's state in battle
@@ -453,7 +453,7 @@ bool battle(Hero& Ian, bool boss, string Curskills[4]) { //return 0: player died
 			enemyCode = 11;
 		}
 		for (int j = 0; j < enemyCode; j++) { itr++; }
-		cout << (*itr).first << " ";
+		cout << (*itr).first << ", ";
 		ptr[i] = (*itr).first;
 	}
 
@@ -462,28 +462,28 @@ bool battle(Hero& Ian, bool boss, string Curskills[4]) { //return 0: player died
 		enemyCode = rand() % 2;
 		if (enemyCode == 0) { ptr[enemyNum] = "PitLord"; }
 		else { ptr[enemyNum] = "VoidTerror"; }
-		sleep(1);
+		sleep(5);
 		cout << "and the Boss: " << ptr[enemyNum] << endl;
 	}
 
 	cout << "in this battle" << endl;
 	char input;
-	sleep(2);
+	sleep(5);
 	system("clear");
 
 	for (int i = 0; i < (enemyNum + boss); i++) {//fight!!!
-		cout << endl << "\t\t\tNow you are fight with " << ptr[i] << endl;
+		cout << endl << "\t\tNow you are fight with " << ptr[i] << endl;
 		Monster Ene = enemy[ptr[i]];
-		sleep(1);
+		sleep(5);
 		system("clear");
 		while (Ene.HP > 0 && Ian.CurHP > 0) {//leave the while loop when palyer beat an enemy or player die
-			cout << endl << "\t\tYour HP :" << Ian.CurHP << "\t\t\tEnemy HP :" << Ene.HP << endl;
+			cout << endl << "\t\tYour HP :" << Ian.CurHP << "\t\tEnemy HP :" << Ene.HP << endl;
 			if (PP[0] == 0 && PP[1] == 0 && PP[2] == 0 && PP[3] == 0) {// if running out all pp, lose the game
 				system("clear");
 				cout << "\n\n\t\tYou lose the battle because all the PP are used up" << endl;
-				sleep(1);
-				cout << "\n\n\n\t\t                game over!";
-				sleep(1);
+				sleep(5);
+				cout << "\n\n\n\t\t                game over!" 
+				sleep(5);
 				return 0;
 			}
 			if (stateP["Freezed"] == 0) {//check freeze
@@ -496,9 +496,16 @@ bool battle(Hero& Ian, bool boss, string Curskills[4]) { //return 0: player died
 				input = _getch();// get valid input
 				while (input != '1' && input != '2' && input != '3' && input != '4') {
 					system("clear");
-					cout << "\t\t\tOh! That's an invalid input. Please follow the instrucion!" << endl;
-					sleep(2);
+					cout << "\t\tOh! That's an invalid input. Please follow the instrucion!" << endl;
+					sleep(5);
 					system("clear");
+					cout << endl << "\t\tNow you are fight with " << ptr[i] << endl;
+					cout << "\n\n\n\t\tPlease press: " << endl;
+					if (PP[0] != 0) { cout << "1 to use " << setw(19) << Curskills[0] << "  PP: " << PP[0] << endl; }
+					if (PP[1] != 0) { cout << "2 to use " << setw(19) << Curskills[1] << "  PP: " << PP[1] << endl; }
+					if (PP[2] != 0) { cout << "3 to use " << setw(19) << Curskills[2] << "  PP: " << PP[2] << endl; }
+					if (PP[3] != 0) { cout << "4 to use " << setw(19) << Curskills[3] << "  PP: " << PP[3] << endl; }
+					cout << "Tips: PP is how many times you can use the skills in the battle" << endl;
 					input = _getch();
 				}
 				if (PP[input - 49] > 0) {// player turn
@@ -515,43 +522,45 @@ bool battle(Hero& Ian, bool boss, string Curskills[4]) { //return 0: player died
 						stateE[skills[Curskills[input - 49]].Eeff] += 1;
 						cout << "\n\t\tnow the enemy is " << skills[Curskills[input - 49]].Peff << endl;
 					}
-					sleep(2);
+					sleep(5);
 					system("clear");
 				}
 				else {
-					cout << "\t\t\tOh! That's an invalid input. Please follow the instrucion!" << endl;
+					cout << "\t\tOh! That's an invalid input. Please follow the instrucion!" << endl;
+					sleep(5);
+					system("clear");
 					continue;
 				}
 			}
 			else {
 				cout << "\n\n\t\tYou are freezed, skip this turn" << endl;//check freezing
 				stateP["Freezed"] -= 1;
-				sleep(2);
+				sleep(5);
 			}
 			if (Ian.CurHP <= 0) {//check HP
 				system("clear");
 				cout << "\n\n\t\tYou died..." << endl;
-				sleep(1);
+				sleep(5);
 				return 0;
 			}
 
 			if (Ene.HP <= 0) {//check HP
 				cout << "\t\tYou won this round!" << endl;
-				sleep(1);
+				sleep(5);
 				system("clear");
 				break;
 			}
 
 			if (stateE["Freezed"] == 0) {// enemy turn
 				Ian.CurHP -= Ene.ATK;
-				cout << "\n\t You are attacked by the enemy!" << endl;
+				cout << "\n\t\t You are attacked by the enemy!" << endl;
 				if (Ene.Peff != "NA") {
 					stateP[Ene.Peff] += 1;
-					cout << "\n\t\tnow you are " << skills[Curskills[input - 49]].Peff << endl;
+					cout << "\n\t\tnow you are " << Ene.Peff << endl;
 				}
 				if (Ene.Eeff != "NA") {
 					stateE[Ene.Eeff] += 1;
-					cout << "\n\t\tnow the enemy is " << skills[Curskills[input - 49]].Peff << endl;
+					cout << "\n\t\tnow the enemy is " << Ene.Eeff << endl;
 				}
 			}
 			else {//check freezing
@@ -612,22 +621,21 @@ bool battle(Hero& Ian, bool boss, string Curskills[4]) { //return 0: player died
 			}
 			if (Ian.CurHP <= 0) {//check HP
 				system("clear");
-				cout << "\n\n\t\tYou died..." << endl;
-				sleep(1);
+				sleep(5);
 				return 0;
 			}
 
 			if (Ene.HP <= 0) {//check HP
 				cout << "\t\tYou won this round!" << endl;
-				sleep(1);
+				sleep(5);
 				system("clear");
 				break;
 			}
-			sleep(2);
+			sleep(5);
 			system("clear");
 		}
 	}
-	cout << "you defeated the Enemies";
+	cout << "\t\tyou defeated the Enemies";
 	delete[] ptr;
 	return 1;
 }
