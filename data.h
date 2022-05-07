@@ -6,6 +6,5 @@
 #include"structures.h"
 using namespace std;
 
-void ReadInArchive(Hero& Ian, int x, int& level, string CurSkills[4]);
 void Save(Hero Ian, int level, string CurSkills[4]);
 #endif
