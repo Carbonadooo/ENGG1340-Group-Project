@@ -8,13 +8,13 @@
 #include<map>
 #include<algorithm>
 #include<unistd.h>
-#include <termio.h>
+#include<termio.h>
 using namespace std;
 
 int _getch(void)
 {
     struct termios tm, tm_old;
-    int fd = 0, char;
+    int fd = 0, chr;
 
     if (tcgetattr(fd, &tm) < 0) return -1;
 
@@ -22,10 +22,10 @@ int _getch(void)
     cfmakeraw(&tm);
     if (tcsetattr(fd, TCSANOW, &tm) < 0) return -1;
 
-    char = getchar();
+    chr = getchar();
     if (tcsetattr(fd, TCSANOW, &tm_old) < 0) return -1;
 
-    return char;
+    return chr;
 }
 
 //64*24 size
@@ -87,7 +87,7 @@ public:
 	vector<string> abilities;
 };
 
-void imp() {//import data
+void imp(map<string,Ability> skills, map<string,Monster> enemy) {//import data
 	Ability tempSkill;
 	Monster tempMonster;
 	string tName;
@@ -103,6 +103,7 @@ void imp() {//import data
 		tempSkill.learned = 0;
 		skills[tName] = tempSkill;
 	}
+
 	fin.close();
 
 	fin.open("monster.txt", ios::in); //import monsters from the files
@@ -117,10 +118,31 @@ void imp() {//import data
 	fin.close();
 }
 
-void ReadInArchive(Hero& Ian, ifstream& fin, int& level, string CurSkills[4]) {
+void ReadInArchive(Hero& Ian, int x, int& level, string CurSkills[4]) {
 	Ability tempSkill;
 	string command;
+  ifstream fin;
+  if (x==1) {
+    fin.open("DefaultArchive.txt");
+    cout<<"\t\tStarting a new game...\n";
+    sleep(2);
+  }
+  else {
+    fin.open("PlayerArchive.txt");
+    fin>>command;
+    if(command=="dead"){
+      cout<<"\t\tYou don't have an archive. Starting a new game...\n";
+      sleep(2);
+      fin.close();
+      fin.open("DefaultArchive.txt");
+    }
+    else{
+      cout<<"\t\tLoading the last game.\n";
+      sleep(2);
+    }
+  }
 	while (fin >> command) {
+
 		if (command == "Level")  fin >> level;
 		if (command == "MaxHP") fin >> Ian.MaxHP;
 		if (command == "CurHP") fin >> Ian.CurHP;
@@ -133,10 +155,13 @@ void ReadInArchive(Hero& Ian, ifstream& fin, int& level, string CurSkills[4]) {
 				fin >> command;
 			}
 		}
-		if (command == "CurrentSkill")
+		if (command == "CurrentSkill"){
+      command="";
 			for (int i = 0; i < 4; i++)
 				fin >> CurSkills[i];
+      }
 	}
+  fin.close();
 }
 
 char GetOption() {
@@ -152,6 +177,7 @@ char GetOption() {
 void Save(Hero Ian, int level, string CurSkills[4]) {
 	ofstream fout;
 	fout.open("PlayerArchive.txt");
+  fout << "alive" << endl;
 	fout << "Level " << level << endl;
 	fout << "MaxHP " << Ian.MaxHP << endl;
 	fout << "CurHP " << Ian.CurHP << endl;
@@ -163,7 +189,7 @@ void Save(Hero Ian, int level, string CurSkills[4]) {
 		fout << *itr << " ";
 	}
 	cout << endl;
-	fout << "CurrentSkills" << endl;
+	fout << "CurrentSkill" << endl;
 	for (int i = 0; i < 4; i++) {
 		fout << CurSkills[i] << " ";
 	}
@@ -285,26 +311,32 @@ void showRoom(Room m[10][10], int x, int y) {
 			txt[6] = "This is your birthroom, empty and peace.";
 			txt[12] = "Go and defeat the boss!";
 			txt[18] = "Try not to die!";
+      break;
 		case 'B':
 			txt[6] = "This is the Boss room.";
 			txt[12] = "Press [F] to start the fight!";
 			txt[18] = "Good luck!";
+      break;
 		case 'M':
 			txt[6] = "This is a medium monster room.";
 			txt[12] = "Press [F] to start the fight!";
 			txt[18] = "Good luck!";
+      break;
 		case 'm':
 			txt[6] = "This is a weak monster room.";
 			txt[12] = "Press [F] to start the fight!";
 			txt[18] = "Good luck!";
+      break;
 		case 'A':
 			txt[6] = "This is an learning room.";
 			txt[12] = "Press [E] to learn a skill!";
 			txt[18] = "It may be powerful!";
+      break;
 		case 'H':
 			txt[6] = "This is the healing room.";
 			txt[12] = "Press [E] to heal up yourself";
 			txt[18] = "You can only use once in this room";
+      break;
 		}
 	}
 	else {
@@ -377,7 +409,6 @@ void changeSkills(string a[4], Hero Ian) {
 	sleep(3);
 }
 
-
 bool battle(Hero& Ian, bool boss, string Curskills[4]) { //return 0: player died, return 1: player won
 	srand(time(NULL));
 	int PP[4];
@@ -431,45 +462,61 @@ bool battle(Hero& Ian, bool boss, string Curskills[4]) { //return 0: player died
 		enemyCode = rand() % 2;
 		if (enemyCode == 0) { ptr[enemyNum] = "PitLord"; }
 		else { ptr[enemyNum] = "VoidTerror"; }
+		sleep(1);
 		cout << "and the Boss: " << ptr[enemyNum] << endl;
 	}
+
 	cout << "in this battle" << endl;
 	char input;
-
-
+	sleep(2);
+	system("clear");
 
 	for (int i = 0; i < (enemyNum + boss); i++) {//fight!!!
-		cout << endl << "\t\tNow you are fight with " << ptr[i] << endl;
+		cout << endl << "\t\t\tNow you are fight with " << ptr[i] << endl;
 		Monster Ene = enemy[ptr[i]];
+		sleep(1);
+		system("clear");
 		while (Ene.HP > 0 && Ian.CurHP > 0) {//leave the while loop when palyer beat an enemy or player die
 			cout << endl << "\t\tYour HP :" << Ian.CurHP << "\t\t\tEnemy HP :" << Ene.HP << endl;
 			if (PP[0] == 0 && PP[1] == 0 && PP[2] == 0 && PP[3] == 0) {// if running out all pp, lose the game
-				cout << "\tYou lose the battle because all the PP are used up" << endl;
+				system("clear");
+				cout << "\n\n\t\tYou lose the battle because all the PP are used up" << endl;
+				sleep(1);
+				cout << "\n\n\n\t\t                game over!";
+				sleep(1);
 				return 0;
 			}
 			if (stateP["Freezed"] == 0) {//check freeze
-				cout << "\t\tPlease press: " << endl;
-				if (PP[0] != 0) { cout << "\t1 to use " << Curskills[0] << "  PP: " << PP[0] << endl; }
-				if (PP[1] != 0) { cout << "\t2 to use " << Curskills[1] << "  PP: " << PP[1] << endl; }
-				if (PP[2] != 0) { cout << "\t3 to use " << Curskills[2] << "  PP: " << PP[2] << endl; }
-				if (PP[3] != 0) { cout << "\t4 to use " << Curskills[3] << "  PP: " << PP[3] << endl; }
+				cout << "\n\n\n\t\tPlease press: " << endl;
+				if (PP[0] != 0) { cout << "1 to use " << setw(19) << Curskills[0] << "  PP: " << PP[0] << endl; }
+				if (PP[1] != 0) { cout << "2 to use " << setw(19) << Curskills[1] << "  PP: " << PP[1] << endl; }
+				if (PP[2] != 0) { cout << "3 to use " << setw(19) << Curskills[2] << "  PP: " << PP[2] << endl; }
+				if (PP[3] != 0) { cout << "4 to use " << setw(19) << Curskills[3] << "  PP: " << PP[3] << endl; }
 				cout << "Tips: PP is how many times you can use the skills in the battle" << endl;
-				cin >> input;// get valid input
+				input = _getch();// get valid input
 				while (input != '1' && input != '2' && input != '3' && input != '4') {
+					system("clear");
 					cout << "\t\t\tOh! That's an invalid input. Please follow the instrucion!" << endl;
-					cin >> input;
+					sleep(2);
+					system("clear");
+					input = _getch();
 				}
 				if (PP[input - 49] > 0) {// player turn
-					cout << "You used the " << Curskills[input - 49] << endl;
+					system("clear");
+					cout << "\n          You used the " << Curskills[input - 49] << endl;
 					Ene.HP -= (skills[Curskills[input - 49]].damage + Ian.ATK);
 					PP[input - 49] -= 1;
 					Ian.CurHP = min(Ian.CurHP + (skills[Curskills[input - 49]].heal), Ian.MaxHP);
 					if (skills[Curskills[input - 49]].Peff != "NA") {
 						stateP[skills[Curskills[input - 49]].Peff] += 1;
+						cout << "\n\t\tnow you are " << skills[Curskills[input - 49]].Peff << endl;
 					}
 					if (skills[Curskills[input - 49]].Eeff != "NA") {
 						stateE[skills[Curskills[input - 49]].Eeff] += 1;
+						cout << "\n\t\tnow the enemy is " << skills[Curskills[input - 49]].Peff << endl;
 					}
+					sleep(2);
+					system("clear");
 				}
 				else {
 					cout << "\t\t\tOh! That's an invalid input. Please follow the instrucion!" << endl;
@@ -477,28 +524,34 @@ bool battle(Hero& Ian, bool boss, string Curskills[4]) { //return 0: player died
 				}
 			}
 			else {
-				cout << "\tYou are freezed, skip this turn" << endl;//check freezing
+				cout << "\n\n\t\tYou are freezed, skip this turn" << endl;//check freezing
 				stateP["Freezed"] -= 1;
+				sleep(2);
 			}
 			if (Ian.CurHP <= 0) {//check HP
-				cout << "\t\tYou died..." << endl;
+				system("clear");
+				cout << "\n\n\t\tYou died..." << endl;
+				sleep(1);
 				return 0;
 			}
 
 			if (Ene.HP <= 0) {//check HP
 				cout << "\t\tYou won this round!" << endl;
+				sleep(1);
+				system("clear");
 				break;
 			}
 
 			if (stateE["Freezed"] == 0) {// enemy turn
 				Ian.CurHP -= Ene.ATK;
-				cout << "\t You are attacked by the enemy!" << endl;
-				cout << " testing HPs  " << Ene.HP << Ian.CurHP << endl;
+				cout << "\n\t You are attacked by the enemy!" << endl;
 				if (Ene.Peff != "NA") {
 					stateP[Ene.Peff] += 1;
+					cout << "\n\t\tnow you are " << skills[Curskills[input - 49]].Peff << endl;
 				}
 				if (Ene.Eeff != "NA") {
 					stateE[Ene.Eeff] += 1;
+					cout << "\n\t\tnow the enemy is " << skills[Curskills[input - 49]].Peff << endl;
 				}
 			}
 			else {//check freezing
@@ -508,76 +561,75 @@ bool battle(Hero& Ian, bool boss, string Curskills[4]) { //return 0: player died
 
 			if (stateP["Toxicosis"] != 0) {//check state of player
 				Ian.CurHP -= 5;
-				cout << "You are toxicosis, -5 HP" << endl;
+				cout << "\t\tYou are toxicosis, -5 HP" << endl;
 				stateP["Toxicosis"] -= 1;
 			}
 			if (stateP["Healed"] != 0) {
 				Ian.CurHP = min(Ian.CurHP + 3, Ian.MaxHP);
-				cout << "You are healed, +3 HP" << endl;
+				cout << "\t\tYou are healed, +3 HP" << endl;
 				stateP["Healed"] -= 1;
 			}
 			if (stateP["Enraged"] != 0) {
 				Ian.ATK += 5;
-				cout << "You are Enraged, +5 ATK" << endl;
+				cout << "\t\tYou are Enraged, +5 ATK" << endl;
 				stateP["Enraged"] -= 1;
 			}
 			if (stateP["Weakened"] != 0) {
 				Ian.ATK -= 3;
-				cout << "You are Weakened, -3 ATK" << endl;
+				cout << "\t\tYou are Weakened, -3 ATK" << endl;
 				stateP["Weakened"] -= 1;
 			}
 			if (stateP["Bleeding"] != 0) {
 				Ian.CurHP -= 3;
-				cout << "You are Bleeding, -3 HP" << endl;
+				cout << "\t\tYou are Bleeding, -3 HP" << endl;
 				stateP["Bleeding"] -= 1;
 			}
 
 			if (stateE["Toxicosis"] != 0) {//check state of enemy
 				Ene.HP -= 5;
-				cout << "Enemy is Bleeding, -5 HP" << endl;
+				cout << "\t\tEnemy is Bleeding, -5 HP" << endl;
 				stateE["Toxicosis"] -= 1;
 			}
 			if (stateE["Healed"] != 0) {
 				Ene.HP += 3;
-				cout << "Enemy is Healed, -5 HP" << endl;
+				cout << "\t\tEnemy is Healed, -5 HP" << endl;
 				stateE["Healed"] -= 1;
 			}
 			if (stateE["Enraged"] != 0) {
 				Ene.ATK += 5;
-				cout << "Enemy is Enraged, +5 ATK" << endl;
+				cout << "\t\tEnemy is Enraged, +5 ATK" << endl;
 				stateE["Enraged"] -= 1;
 			}
 			if (stateE["Weakened"] != 0) {
 				Ene.ATK -= 3;
-				cout << "Enemy is Weakened, -3 ATK" << endl;
+				cout << "\t\tEnemy is Weakened, -3 ATK" << endl;
 				stateE["Weakened"] -= 1;
 			}
 			if (stateP["Bleeding"] != 0) {
 				Ene.HP -= 3;
-				cout << "Enemy is Bleeding, -3 HP" << endl;
+				cout << "\t\tEnemy is Bleeding, -3 HP" << endl;
 				stateP["Bleeding"] -= 1;
 			}
 			if (Ian.CurHP <= 0) {//check HP
-				cout << "\t\tYou died..." << endl;
+				system("clear");
+				cout << "\n\n\t\tYou died..." << endl;
+				sleep(1);
 				return 0;
 			}
+
 			if (Ene.HP <= 0) {//check HP
 				cout << "\t\tYou won this round!" << endl;
+				sleep(1);
+				system("clear");
 				break;
 			}
-
+			sleep(2);
+			system("clear");
 		}
 	}
 	cout << "you defeated the Enemies";
 	delete[] ptr;
 	return 1;
-}
-
-void initialize(Hero& Ian) {
-	Ian.MaxHP = 100;
-	Ian.CurHP = 100;
-	Ian.abilities.push_back("Fireblast");
-	Ian.ATK = 0;
 }
 
 
@@ -590,34 +642,17 @@ FLAG:
 	char key;
 	key = GetOption();//Get first option
 	int level = 1;
-	ifstream fin;
-	bool continueAble = 0;
+  imp(skills, enemy);
 	if (key == '3') { //3:  Exit
 		return 0;
 	}
 	else if (key == '1') {//1: New Game
-		fin.open("DefaultArchive.txt");//read the default archive	
-		cout << "\t\tStarting a new game...\n";
-		sleep(2);
+  	ReadInArchive(Ian, 1, level, CurSkills);//load the game data
 	}
 	else if (key == '2') {//2: Continue Game
-		fin.open("PlayerArchive.txt");//read the player archive
-		string a;
-		fin >> a;
-		if (a == "dead") {
-			cout << "\t\tYou don't have an archive. Starting a new game...\n";
-			sleep(2);
-			fin.open("DefaultArchive.txt");//read the default archive	
-		}
-		else {
-			cout << "\t\tLoading the last game...\n";
-			sleep(2);
-		}
+  	ReadInArchive(Ian, 2, level, CurSkills);//load the game data
 	}
 	system("clear");
-	imp();
-	ReadInArchive(Ian, fin, level, CurSkills);//load the game data
-	fin.close();
 
 	for (level; level < 6; ++level) {
 		Save(Ian, level, CurSkills);//save the data at the beginning of the level
@@ -627,11 +662,13 @@ FLAG:
 		Room m[10][10];
 		bool mapOpen;
 		generateMap(m, level, bx, by);//generate a random map
+    m[4][4].type='0';
 		showMap(m, level, x, y, mapOpen);//show the map
 		while (m[bx][by].cleared == 0) {
 			cout << "			Press [Q] to quit the game." << endl;
 			cout << "			Press [B] to modify your skills." << endl;
 			cout << "			Press [W/A/S/D] to move in the map." << endl;
+      FIGHT:
 			char key = _getch();
 			char curType;// current room type
 			bool curCleared;// current room status
@@ -639,14 +676,14 @@ FLAG:
 			curCleared = m[x][y].cleared;
 			if ((curType == 'm' || curType == 'M' || curType == 'B') && (curCleared == 0)) {//in the monster room
 				if (key == 'f') {
-					m[x][y].cleared = battle(Ian, m[x][y].type, CurSkills);
+					m[x][y].cleared = battle(Ian, m[x][y].type=='B', CurSkills);
 				}
 				else if (key == 'q') {//quit
 					cout << "\t\t\t\tWarning!!\n\t\tYour data in this level won't be saved if you quit now!!\n\t\tPress [Q] to confirm\t\tPress [C] to cancel\n";
 					key = _getch();
 					system("clear");
 					if (key == 'q') goto FLAG;
-					if (key == 'c') showRoom(m, x, y);
+					if (key == 'c') {showRoom(m, x, y); goto FIGHT;}
 				}
 				else if (key == 'm') {//close or open the map
 					if (mapOpen == true) {
@@ -656,15 +693,18 @@ FLAG:
 					else {
 						showMap(m, level, x, y, mapOpen);
 					}
+          goto FIGHT;
 				}
 				else {
-					cout << "\t\t\tFighting is doomed!Don't run away!\n";
-					m[x][y].cleared = battle(Ian, m[x][y].type, CurSkills);
+					cout << "\t\t\tFighting is doomed!Don't run away!\n\n\n";
+          sleep(4);
+					m[x][y].cleared = battle(Ian, m[x][y].type=='B', CurSkills);
 				}
 
 				if (m[x][y].cleared == 0) {
 					system("clear");
-					cout << "\n\n\n\n\n\n\t\t\t\t\tYou are dead!";
+					cout << "\n\n\n\n\n\n\t\t\t\t\tYou are dead!\n\n";
+          sleep(4);
 					dead();
 					goto FLAG;
 				}
@@ -692,7 +732,7 @@ FLAG:
 					system("clear");
 					if (key == 'q') goto FLAG;
 					if (key == 'c') showRoom(m, x, y);
-
+          break;
 					//movement in four directions
 				case 'w':
 					if (x == 0) {
@@ -755,29 +795,33 @@ FLAG:
 					else if (m[x][y].type == 'A') {//learn the ability
 						string tmpAbility;
 						map<string, Ability>::iterator itr;
-						int tot = 0, code = 0;
-						for (itr = skills.begin(); itr != skills.end(); ++itr) tot;//get the total numbers of the abilities
-						itr = skills.begin();
-						code = rand() % tot;
-						for (int i = 0; i < code + 1; ++i) ++itr;
+						int code = 0;
+						code = rand() % skills.size();
+            itr = skills.begin();
+						for (int i = 0; i < code; ++i) ++itr;
 						while ((*itr).second.learned == true) {
 							itr = skills.begin();
-							code = rand() % tot;
-							for (int i = 0; i < code + 1; ++i) ++itr;
+							code = rand() % skills.size();
+							for (int i = 0; i <code; ++i) ++itr;
 						}//roll an unlearned ability randomly
 						tmpAbility = (*itr).first;
-						skills[tmpAbility].learned = 1;//learned
+						skills[tmpAbility].learned = true;//learned
 						system("clear");
-						cout << "\t\t\t You have learned this skill called" << tmpAbility << endl;
-						sleep(3);
+						cout << "\t\t\t You have learned this skill called " << tmpAbility << endl;
+						sleep(5);
 						Ian.abilities.push_back(tmpAbility);//Ian learned this ability;
+            int xx = 0;
+            while(CurSkills[xx]!="NA"){
+              xx++;
+              if(xx==4)break;
+            }
+            if(xx<4)CurSkills[xx]=tmpAbility;//take the new skills to the current list if the number is fewer than 4
 						m[x][y].cleared = 1;
 						showRoom(m, x, y);
 					}
 					break;
 				case 'b'://change skills
 					changeSkills(CurSkills, Ian);
-					m[x][y].cleared = 1;
 					showRoom(m, x, y);
 					break;
 				default:
@@ -789,6 +833,6 @@ FLAG:
 		}
 	}
   	cout<<"\n\n\n\n\t\t\tCongratulations! You defeated all the monsters!";
-  	sleep(10)
+  	sleep(10);
 	return 0;
 }
