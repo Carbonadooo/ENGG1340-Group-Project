@@ -1,7 +1,6 @@
 #include<iostream>
 #include<string>
 #include<iomanip>
-#include<conio.h>
 #include<vector>
 #include<fstream>
 #include<cstdlib>
