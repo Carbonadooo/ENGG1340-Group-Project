@@ -9,6 +9,7 @@
 #include<map>
 #include<algorithm>
 #include<unistd.h>
+#include<termio.h>
 #include"data.h"
 #include"show.h"
 #include"structures.h"
@@ -17,6 +18,23 @@ using namespace std;
 
 map<string, Monster> enemy; //store enemy's data
 map<string, Ability> skills; //store player's ablity
+
+int _getch(void)
+{
+    struct termios tm, tm_old;
+    int fd = 0, char;
+
+    if (tcgetattr(fd, &tm) < 0) return -1;
+
+    tm_old = tm;
+    cfmakeraw(&tm);
+    if (tcsetattr(fd, TCSANOW, &tm) < 0) return -1;
+
+    char = getchar();
+    if (tcsetattr(fd, TCSANOW, &tm_old) < 0) return -1;
+
+    return char;
+}
 
 char GetOption() {
 	cout << "Enter number to make choice: " << endl;
