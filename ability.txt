@@ -1,6 +1,6 @@
 Fireblast 8 0 999 NA NA 1
 Fireball 15 0 10 NA NA 2
-Revive 0 12 20 healed NA 3
+FlashHeal 0 12 20 healed NA 3
 SiphonSoul 5 8 10 Enraged weakened 4
 ForbiddenRitual 50 -15 5 weakened NA  5
 Blizzard 5 0 8 NA freezed 6
