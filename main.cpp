@@ -21,7 +21,7 @@ map<string, Ability> skills; //store player's ablity
 int _getch(void)
 {
     struct termios tm, tm_old;
-    int fd = 0, char;
+    int fd = 0, chr;
 
     if (tcgetattr(fd, &tm) < 0) return -1;
 
@@ -29,10 +29,10 @@ int _getch(void)
     cfmakeraw(&tm);
     if (tcsetattr(fd, TCSANOW, &tm) < 0) return -1;
 
-    char = getchar();
+    chr = getchar();
     if (tcsetattr(fd, TCSANOW, &tm_old) < 0) return -1;
 
-    return char;
+    return chr;
 }
 
 void imp() {//import data
