@@ -1,12 +1,12 @@
-Fireblast 8 0 999 NA NA 1
-Fireball 18 0 15 NA NA 2
-FlashHeal 0 12 25 Healed NA 3
-SiphonSoul 5 8 15 Enraged Weakened 4
-ForbiddenRitual 50 -15 8 Weakened NA  5
-Blizzard 5 0 10 NA Freezed 6
-Hypnotize 0 0 15 Enraged Freezed 7
-Slam 8 0 15 Enraged Bleeding 8
-InnerRage 0 3 999 Enraged NA 9
-MortalStrike 70 -15 5 Freezed NA 0
-Crush 50 0 5 Weakened NA -
-Rally 0 30 12 Enraged NA 0 =
+Fireblast 8 0 999 NA NA
+Fireball 18 0 15 NA NA
+FlashHeal 0 12 25 Healed NA
+SiphonSoul 5 8 15 Enraged Weakened
+ForbiddenRitual 50 -15 8 Weakened NA 
+Blizzard 5 0 10 NA Freezed
+Hypnotize 0 0 15 Enraged Freezed
+Slam 8 0 15 Enraged Bleeding
+InnerRage 0 3 999 Enraged NA
+MortalStrike 70 -15 5 Freezed NA
+Crush 50 0 5 Weakened NA
+Rally 0 30 12 Enraged NA 0
