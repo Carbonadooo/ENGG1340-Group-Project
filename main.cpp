@@ -35,6 +35,37 @@ int _getch(void)
     return char;
 }
 
+void imp() {//import data
+	Ability tempSkill;
+	Monster tempMonster;
+	string tName;
+	ifstream fin;
+	fin.open("ability.txt", ios::in); //import abilities from the files
+	if (fin.fail()) {
+		cout << "Error in file opening!" << endl;
+		exit(1);
+	}
+	while (fin >> tName) {
+		fin >> tempSkill.damage >> tempSkill.heal >> tempSkill.mana;
+		fin >> tempSkill.Peff >> tempSkill.Eeff;
+		tempSkill.learned = 0;
+		skills[tName] = tempSkill;
+	}
+
+	fin.close();
+
+	fin.open("monster.txt", ios::in); //import monsters from the files
+	if (fin.fail()) {
+		cout << "Error in file opening!" << endl;
+		exit(1);
+	}
+	while (fin >> tName) {
+		fin >> tempMonster.HP >> tempMonster.ATK >> tempMonster.Peff >> tempMonster.Eeff;
+		enemy[tName] = tempMonster;
+	}
+	fin.close();
+}
+
 char GetOption() {
 	cout << "Enter number to make choice: " << endl;
 	char key = _getch();
@@ -109,14 +140,6 @@ void changeSkills(string a[4], Hero Ian) {
 	sleep(3);
 }
 
-void initialize(Hero& Ian) {
-	Ian.MaxHP = 100;
-	Ian.CurHP = 100;
-	Ian.abilities.push_back("Fireblast");
-	Ian.ATK = 0;
-}
-
-
 int main() {
 FLAG:
 	srand(time(NULL));
@@ -126,34 +149,17 @@ FLAG:
 	char key;
 	key = GetOption();//Get first option
 	int level = 1;
-	ifstream fin;
-	bool continueAble = 0;
+	imp()
 	if (key == '3') { //3:  Exit
 		return 0;
 	}
 	else if (key == '1') {//1: New Game
-		fin.open("DefaultArchive.txt");//read the default archive	
-		cout << "\t\tStarting a new game...\n";
-		sleep(2);
+		ReadInArchive(Ian, 1, level, CurSkills);//load the game data
 	}
-	else if (key == '2') {//2: Continue Game
-		fin.open("PlayerArchive.txt");//read the player archive
-		string a;
-		fin >> a;
-		if (a == "dead") {
-			cout << "\t\tYou don't have an archive. Starting a new game...\n";
-			sleep(2);
-			fin.open("DefaultArchive.txt");//read the default archive	
-		}
-		else {
-			cout << "\t\tLoading the last game...\n";
-			sleep(2);
-		}
+	else if (key == '2') {
+		ReadInArchive(Ian, 2, level, CurSkills);//load the game data
 	}
 	system("clear");
-	imp();
-	ReadInArchive(Ian, fin, level, CurSkills);//load the game data
-	fin.close();
 
 	for (level; level < 6; ++level) {
 		Save(Ian, level, CurSkills);//save the data at the beginning of the level
@@ -163,11 +169,13 @@ FLAG:
 		Room m[10][10];
 		bool mapOpen;
 		generateMap(m, level, bx, by);//generate a random map
+		m[4][4].type='0';
 		showMap(m, level, x, y, mapOpen);//show the map
 		while (m[bx][by].cleared == 0) {
 			cout << "			Press [Q] to quit the game." << endl;
 			cout << "			Press [B] to modify your skills." << endl;
 			cout << "			Press [W/A/S/D] to move in the map." << endl;
+		FIGHT:
 			char key = _getch();
 			char curType;// current room type
 			bool curCleared;// current room status
@@ -175,14 +183,14 @@ FLAG:
 			curCleared = m[x][y].cleared;
 			if ((curType == 'm' || curType == 'M' || curType == 'B') && (curCleared == 0)) {//in the monster room
 				if (key == 'f') {
-					m[x][y].cleared = battle(Ian, m[x][y].type, CurSkills);
+					m[x][y].cleared = battle(Ian, m[x][y].type=='B', CurSkills);
 				}
 				else if (key == 'q') {//quit
 					cout << "\t\t\t\tWarning!!\n\t\tYour data in this level won't be saved if you quit now!!\n\t\tPress [Q] to confirm\t\tPress [C] to cancel\n";
 					key = _getch();
 					system("clear");
 					if (key == 'q') goto FLAG;
-					if (key == 'c') showRoom(m, x, y);
+					if (key == 'c') {showRoom(m, x, y); goto FIGHT;}
 				}
 				else if (key == 'm') {//close or open the map
 					if (mapOpen == true) {
@@ -195,12 +203,12 @@ FLAG:
 				}
 				else {
 					cout << "\t\t\tFighting is doomed!Don't run away!\n";
-					m[x][y].cleared = battle(Ian, m[x][y].type, CurSkills);
+					m[x][y].cleared = battle(Ian, m[x][y].type=='B', CurSkills);
 				}
 
 				if (m[x][y].cleared == 0) {
 					system("clear");
-					cout << "\n\n\n\n\n\n\t\t\t\t\tYou are dead!";
+					cout << "\n\n\n\n\n\n\t\t\t\t\tYou are dead!\n\n";
 					dead();
 					goto FLAG;
 				}
@@ -291,40 +299,44 @@ FLAG:
 					else if (m[x][y].type == 'A') {//learn the ability
 						string tmpAbility;
 						map<string, Ability>::iterator itr;
-						int tot = 0, code = 0;
-						for (itr = skills.begin(); itr != skills.end(); ++itr) tot;//get the total numbers of the abilities
-						itr = skills.begin();
-						code = rand() % tot;
-						for (int i = 0; i < code + 1; ++i) ++itr;
+						int code = 0;
+						code = rand() % skills.size();
+            					itr = skills.begin();
+						for (int i = 0; i < code; ++i) ++itr;
 						while ((*itr).second.learned == true) {
 							itr = skills.begin();
-							code = rand() % tot;
-							for (int i = 0; i < code + 1; ++i) ++itr;
+							code = rand() % skills.size();
+							for (int i = 0; i <code; ++i) ++itr;
 						}//roll an unlearned ability randomly
 						tmpAbility = (*itr).first;
-						skills[tmpAbility].learned = 1;//learned
+						skills[tmpAbility].learned = true;//learned
 						system("clear");
-						cout << "\t\t\t You have learned this skill called" << tmpAbility << endl;
-						sleep(3);
+						cout << "\t\t\t You have learned this skill called " << tmpAbility << endl;
+						sleep(5);
 						Ian.abilities.push_back(tmpAbility);//Ian learned this ability;
+            			int xx = 0;
+            			while(CurSkills[xx]!="NA"){
+              			xx++;
+              			if(xx==4)break;
+           				}
+            			if(xx<4)CurSkills[xx]=tmpAbility;//take the new skills to the current list if the number is fewer than 4
 						m[x][y].cleared = 1;
 						showRoom(m, x, y);
 					}
 					break;
 				case 'b'://change skills
 					changeSkills(CurSkills, Ian);
-					m[x][y].cleared = 1;
 					showRoom(m, x, y);
 					break;
 				default:
 					cout << "\t\t\tInvalid input!\n";
-					sleep(2);
+					sleep(3);
 					showRoom(m, x, y);
 				}
 			}
 		}
 	}
-  cout<<"\n\n\n\n\t\t\tCongratulations! You defeated all the monsters!";
-  sleep(10)
+ 	cout<<"\n\n\n\n\t\t\tCongratulations! You defeated all the monsters!";
+ 	sleep(10)
 	return 0;
 }
