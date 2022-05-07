@@ -14,5 +14,6 @@ public:
 
 void frontPage();
 void generateMap(Room m[10][10], int level, int& bx, int& by);
-
+void showMap(Room m[10][10], int level, int cx, int cy, bool& mapOpen);
+void showRoom(Room m[10][10], int x, int y);
 #endif
