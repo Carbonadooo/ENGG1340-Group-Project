@@ -5,25 +5,7 @@
 #include "battle.h"
 #include <map>
 #include "structures.h"
-#include <unistd.h>
-#include <termio.h>
-
-int _getch(void)
-{
-    struct termios tm, tm_old;
-    int fd = 0, chr;
-
-    if (tcgetattr(fd, &tm) < 0) return -1;
-
-    tm_old = tm;
-    cfmakeraw(&tm);
-    if (tcsetattr(fd, TCSANOW, &tm) < 0) return -1;
-
-    chr = getchar();
-    if (tcsetattr(fd, TCSANOW, &tm_old) < 0) return -1;
-
-    return chr;
-}
+#include "getch.h"
 using namespace std;
 
 bool battle(Hero& Ian, bool boss, string Curskills[4],map<string, Ability> skills ,map<string, Monster> enemy ) { //return 0: player died, return 1: player won
