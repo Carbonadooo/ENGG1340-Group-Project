@@ -16,3 +16,5 @@
 - When you meet monsters, you cannot escape! You have to fight as a HERO!
 - beat the BOSS to get to the deeper levels.
 - And, Enjoy! :)
+# importance:
+- main.cpp is the main part, use "make main" to compile and use ./main to play
