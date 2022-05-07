@@ -3,4 +3,4 @@ MaxHP 100
 CurHP 100
 Attack 0
 Ability Fireblast
-CurrentSkills Fireblast NA NA NA
+CurrentSkill Fireblast NA NA NA
