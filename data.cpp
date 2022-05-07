@@ -1,5 +1,6 @@
 #include<iostream>
 #include<map>
+#include<termio.h>
 #include"data.h"
 
 
