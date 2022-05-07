@@ -9,4 +9,4 @@ Slam 8 0 15 Enraged Bleeding
 InnerRage 0 3 999 Enraged NA
 MortalStrike 70 -15 5 Freezed NA
 Crush 50 0 5 Weakened NA
-Rally 0 30 12 Enraged NA 0
+Rally 0 30 12 Enraged NA
