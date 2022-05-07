@@ -228,6 +228,7 @@ FLAG:
 					else {
 						showMap(m, level, x, y, mapOpen);
 					}
+					goto FIGHT;
 				}
 				else {
 					cout << "\t\t\tFighting is doomed!Don't run away!\n";
