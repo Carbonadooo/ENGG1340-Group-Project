@@ -771,5 +771,7 @@ FLAG:
 			}
 		}
 	}
+  	cout<<"\n\n\n\n\t\t\tCongratulations! You defeated all the monsters!";
+  	sleep(10)
 	return 0;
 }
