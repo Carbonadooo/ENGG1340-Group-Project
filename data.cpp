@@ -1,6 +1,6 @@
 #include<iostream>
 #include<map>
-#include<termio.h>
+#include<unistd.h>
 #include"data.h"
 
 
