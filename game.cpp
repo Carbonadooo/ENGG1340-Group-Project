@@ -281,11 +281,190 @@ void showRoom(Room m[10][10], int x, int y) {
 }
 
 
+/* form of selected skills: only store the name. PP: only store the numbers remained 
+can use this to import/reefresh the PP when learned a new skill or get to the revive room:
+	for (int i=0; i < 4; i++){
+        	PP[i]=skills[Curski[i]].mana;
+    	}// import/refresh the mana(how many times can be used)*/
+// input: Hero data, have boss or not, selected skills, the PP of skills
+int battle(Hero &Ian,bool boss,string Curskills[4], int PP[4]){ //return 1: player died, return 0: player won
+    srand(time(NULL));
+    map<string, int> stateP; //player's state in battle
+    stateP["Toxicosis"] = 0; // -5 HP
+    stateP["Healed"] = 0; // +3 HP
+    stateP["Enraged"] = 0; // +5 ATK
+    stateP["Freezed"] = 0; // skip 1 turn
+    stateP["Weakened"] = 0; // -3 ATK
+    stateP["Bleeding"] = 0; // - 3 HP
+    map<string, int> stateE; //player's state in battle
+    stateE["Toxicosis"] = 0; // -5 HP
+    stateE["Healed"] = 0; // +3 HP
+    stateE["Enraged"] = 0; // +5 ATK
+    stateE["Freezed"] = 0; // skip 1 turn
+    stateE["Weakened"] = 0; // -3 ATK
+    stateE["Bleeding"] = 0; // - 3 HP
+    int enemyNum = rand()%3+1,enemyCode; //generate 1-3 random enemies to fight
+    string *ptr;
+    if (boss == 1){//store the generate enemies
+        ptr = new string[enemyNum+1];
+        } 
+    else{
+        ptr = new string[enemyNum];// if have boss, add the boss at the end of the enemyList
+    }
+    map<string, Monster>::iterator itr;
+    for (int i=0; i < enemyNum; i++){//generating
+        itr = enemy.begin();
+        enemyCode = rand()%11;
+        if (enemyCode == 9){
+            enemyCode = 12;
+        }
+        else if (enemyCode == 6){
+            enemyCode = 11;
+        }
+        cout << "the code is " << enemyCode << endl;
+        for (int j=0; j<enemyCode; j++){itr++;}
+        cout << "enemy is " << (*itr).first << endl;
+        ptr[i]=(*itr).first;
+    }
+    if (boss == 1){// add the boss
+        enemyCode = rand()%2;
+        if (enemyCode == 0){ptr[enemyNum]="PitLord";}
+        else{ptr[enemyNum]="VoidTerror";} 
+    }
+    char input;
+
+
+    
+    for(int i=0; i<(enemyNum+boss); i++){//fight!!!
+        cout << "Now you are fight with " << ptr[i] << endl;
+        Monster Ene = enemy[ptr[i]];
+        while (Ene.HP >0 && Ian.HP>0){//leave the while loop when palyer beat an enemy or player die
+            if (PP[0]==0 && PP[0]==0 && PP[0]==0 && PP[0]==0){// if running out all pp, lose the game
+                cout << "You lose the battle because all the PP are used up" << endl;
+                return 1;
+            }
+            if (stateP["Freezed"] == 0){//check freeze
+                cin >> input;// get valid input
+                while (input != '1' && input != '2' && input != '3' && input != '4'){
+                    cout << "invalid input" << endl;
+                    cin >> input;
+                }
+                if (PP[input-49]>0){// player turn
+                    cout << "You used the " << Curskills[input-49]  << endl;
+                    Ene.HP -= (skills[Curskills[input-49]].damage+Ian.ATK);
+                    PP[input-49]-=1;
+                    if (skills[Curskills[input-49]].Peff != "NA"){
+                    stateP[skills[Curskills[input-49]].Peff]+=1;
+                    }
+                    if (skills[Curskills[input-49]].Eeff != "NA"){
+                        stateE[skills[Curskills[input-49]].Eeff]+=1;
+                    }
+                }
+                else {
+                    cout << "Oh! the PP of the skill has been used up! choose another skill" << endl;
+                    continue;
+                }
+            }
+            else{
+                cout << "You are freezed, skip this turn" << endl;//check freezing
+                stateP["Freezed"] -= 1;
+            }
+            if (Ene.HP<=0){//check HP
+                    cout << "You won in this battle" << endl;
+                    break;
+            }
+            else if (Ian.HP<=0){//check HP
+                cout << "You died" << endl;
+                return 1;
+            }
+            if (stateE["Freezed"] == 0){// enemy turn
+                Ian.HP -= Ene.ATK;
+                cout << " You are attacked by the enemy!" << endl;
+                cout << " testing HPs " << Ene.HP << Ian.HP << endl;
+                if (Ene.Peff != "NA"){
+                    stateP[Ene.Peff]+=1;
+                }
+                if (Ene.Eeff != "NA"){
+                    stateE[Ene.Eeff]+=1;
+                }
+            }
+            else{//check freezing
+                stateE["Freezed"]-=1;
+                cout << "the enemy was freezed, it can't attack you in this turn";
+            }
+
+            if (stateP["Toxicosis"] != 0){//check state of player
+                Ian.HP -= 5;
+                cout << "You are toxicosis, -5 HP" << endl;
+                stateP["Toxicosis"]-=1;
+            }
+            if (stateP["Healed"] != 0){
+                Ian.HP += 3;
+                cout << "You are healed, +3 HP" << endl;
+                stateP["Healed"]-=1;
+            }
+            if (stateP["Enraged"] != 0){
+                Ian.ATK += 5;
+                stateP["Enraged"]-=1;
+            }
+            if (stateP["Weakened"] != 0){
+                Ian.ATK -= 3;
+                stateP["Weakened"]-=1;
+            }
+            if (stateP["Bleeding"] != 0){
+                Ian.HP -= 3;
+                stateP["Bleeding"]-=1;
+            }
+
+            if (stateE["Toxicosis"] != 0){//check state of enemy
+                Ene.HP -= 5;
+                stateE["Toxicosis"]-=1;
+            }
+            if (stateE["Healed"] != 0){
+                Ene.HP += 3;
+                stateE["Healed"]-=1;
+            }
+            if (stateE["Enraged"] != 0){
+                Ene.ATK += 5;
+                stateE["Enraged"]-=1;
+            }
+            if (stateE["Weakened"] != 0){
+                Ene.ATK -= 3;
+                stateE["Weakened"]-=1;
+            }
+            if (stateP["Bleeding"] != 0){
+                Ene.HP -= 3;
+                stateP["Bleeding"]-=1;
+            }
+            if (Ene.HP<=0){//check HP
+                    cout << "You won in this battle" << endl;
+                    break;
+            }
+            else if (Ian.HP<=0){//check HP
+                cout << "You died" << endl;
+                return 1;
+            }
+        }   
+    }
+    cout << "you defeated the Enemies";
+    delete [] ptr;
+    return 0;
+}
+
+void initialize (Hero &Ian){
+	Ian.MAXHP = 100;
+	Ian.CurHP = 100;
+	abilities.push_back("Fireblast");
+	Ian.ATK=0;
+}
+
+
 
 int main() {
 	FLAG:
 	srand(time(NULL));
 	Hero Ian;//The Hero of the game
+	initialize(Ian);
 	frontPage();//show the front page
 	char key;
 	key = GetOption();//Get first option
