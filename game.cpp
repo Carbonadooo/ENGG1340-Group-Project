@@ -87,7 +87,7 @@ public:
 	vector<string> abilities;
 };
 
-void imp(map<string,Ability> skills, map<string,Monster> enemy) {//import data
+void imp() {//import data
 	Ability tempSkill;
 	Monster tempMonster;
 	string tName;
@@ -642,7 +642,7 @@ FLAG:
 	char key;
 	key = GetOption();//Get first option
 	int level = 1;
-  imp(skills, enemy);
+  imp();
 	if (key == '3') { //3:  Exit
 		return 0;
 	}
@@ -826,7 +826,7 @@ FLAG:
 					break;
 				default:
 					cout << "\t\t\tInvalid input!\n";
-					sleep(2);
+					sleep(3);
 					showRoom(m, x, y);
 				}
 			}
