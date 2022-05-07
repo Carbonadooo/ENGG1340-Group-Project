@@ -87,7 +87,7 @@ public:
 	vector<string> abilities;
 };
 
-void imp(map<string,Ability> skills, map<string,Monster> enemy) {//import data
+void imp() {//import data
 	Ability tempSkill;
 	Monster tempMonster;
 	string tName;
@@ -482,7 +482,7 @@ bool battle(Hero& Ian, bool boss, string Curskills[4],map<string, Ability> skill
 				system("clear");
 				cout << "\n\n\t\tYou lose the battle because all the PP are used up" << endl;
 				sleep(3);
-				cout << "\n\n\n\t\t                game over!";
+				cout << "\n\n\n\t\t                game over!" 
 				sleep(2);
 				return 0;
 			}
@@ -650,7 +650,7 @@ FLAG:
 	char key;
 	key = GetOption();//Get first option
 	int level = 1;
-  imp(skills, enemy);
+  imp();
 	if (key == '3') { //3:  Exit
 		return 0;
 	}
@@ -684,7 +684,7 @@ FLAG:
 			curCleared = m[x][y].cleared;
 			if ((curType == 'm' || curType == 'M' || curType == 'B') && (curCleared == 0)) {//in the monster room
 				if (key == 'f') {
-					m[x][y].cleared = battle(Ian, m[x][y].type=='B', CurSkills,skills, enemy);
+					m[x][y].cleared = battle(Ian, m[x][y].type=='B', CurSkills);
 				}
 				else if (key == 'q') {//quit
 					cout << "\t\t\t\tWarning!!\n\t\tYour data in this level won't be saved if you quit now!!\n\t\tPress [Q] to confirm\t\tPress [C] to cancel\n";
@@ -706,7 +706,7 @@ FLAG:
 				else {
 					cout << "\t\t\tFighting is doomed!Don't run away!\n\n\n";
           sleep(4);
-					m[x][y].cleared = battle(Ian, m[x][y].type=='B', CurSkills, skills, enemy);
+					m[x][y].cleared = battle(Ian, m[x][y].type=='B', CurSkills);
 				}
 
 				if (m[x][y].cleared == 0) {
@@ -834,7 +834,7 @@ FLAG:
 					break;
 				default:
 					cout << "\t\t\tInvalid input!\n";
-					sleep(2);
+					sleep(3);
 					showRoom(m, x, y);
 				}
 			}
