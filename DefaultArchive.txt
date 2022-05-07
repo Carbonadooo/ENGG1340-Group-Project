@@ -1,4 +1,3 @@
-alive
 Level 1
 MaxHP 100
 CurHP 100
