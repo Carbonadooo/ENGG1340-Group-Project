@@ -149,7 +149,7 @@ FLAG:
 	char key;
 	key = GetOption();//Get first option
 	int level = 1;
-	imp()
+	imp();
 	if (key == '3') { //3:  Exit
 		return 0;
 	}
@@ -183,7 +183,7 @@ FLAG:
 			curCleared = m[x][y].cleared;
 			if ((curType == 'm' || curType == 'M' || curType == 'B') && (curCleared == 0)) {//in the monster room
 				if (key == 'f') {
-					m[x][y].cleared = battle(Ian, m[x][y].type=='B', CurSkills);
+					m[x][y].cleared = battle(Ian, m[x][y].type=='B', CurSkills, skills, enemy);
 				}
 				else if (key == 'q') {//quit
 					cout << "\t\t\t\tWarning!!\n\t\tYour data in this level won't be saved if you quit now!!\n\t\tPress [Q] to confirm\t\tPress [C] to cancel\n";
@@ -203,7 +203,7 @@ FLAG:
 				}
 				else {
 					cout << "\t\t\tFighting is doomed!Don't run away!\n";
-					m[x][y].cleared = battle(Ian, m[x][y].type=='B', CurSkills);
+					m[x][y].cleared = battle(Ian, m[x][y].type=='B', CurSkills, skills, enemy);
 				}
 
 				if (m[x][y].cleared == 0) {
@@ -337,6 +337,6 @@ FLAG:
 		}
 	}
  	cout<<"\n\n\n\n\t\t\tCongratulations! You defeated all the monsters!";
- 	sleep(10)
+ 	sleep(10);
 	return 0;
 }
