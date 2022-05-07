@@ -6,7 +6,7 @@
 - An rougelike games: to be a hero and beat the monsters with your super power and conquer the dungeon!
 # Key Features:
 - Randomly generated map
-- More than a dozen kinds of enemies and abilities
-- Can archived at any time
+- Abundent enemies and abilities
+- Archive after you reach a new level
 # Rule:
 - A list of features that you plan to implement, and explain how each coding element from 1 to 5 listed under the coding requirements aforementioned have supported your features.
