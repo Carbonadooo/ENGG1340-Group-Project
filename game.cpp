@@ -482,7 +482,7 @@ bool battle(Hero& Ian, bool boss, string Curskills[4],map<string, Ability> skill
 				system("clear");
 				cout << "\n\n\t\tYou lose the battle because all the PP are used up" << endl;
 				sleep(5);
-				cout << "\n\n\n\t\t                game over!" 
+				cout << "\n\n\n\t\t                game over!" ;
 				sleep(5);
 				return 0;
 			}
@@ -684,7 +684,7 @@ FLAG:
 			curCleared = m[x][y].cleared;
 			if ((curType == 'm' || curType == 'M' || curType == 'B') && (curCleared == 0)) {//in the monster room
 				if (key == 'f') {
-					m[x][y].cleared = battle(Ian, m[x][y].type=='B', CurSkills);
+					m[x][y].cleared = battle(Ian, m[x][y].type=='B', CurSkills, skills,enemy);
 				}
 				else if (key == 'q') {//quit
 					cout << "\t\t\t\tWarning!!\n\t\tYour data in this level won't be saved if you quit now!!\n\t\tPress [Q] to confirm\t\tPress [C] to cancel\n";
@@ -706,7 +706,7 @@ FLAG:
 				else {
 					cout << "\t\t\tFighting is doomed!Don't run away!\n\n\n";
           sleep(4);
-					m[x][y].cleared = battle(Ian, m[x][y].type=='B', CurSkills);
+					m[x][y].cleared = battle(Ian, m[x][y].type=='B', CurSkills,skills,enemy);
 				}
 
 				if (m[x][y].cleared == 0) {
