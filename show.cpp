@@ -115,7 +115,7 @@ void showMap(Room m[10][10], int level, int cx, int cy, bool& mapOpen) {
 				else if (t == '0')
 					cout << "|     |";
 			}
-			else cout << "|  ¡Ì  |";
+			else cout << "|  Â¡ÃŒ  |";
 		}//second layer
 		cout << endl;
 		for (int j = 0; j < 10; ++j) {
@@ -139,26 +139,32 @@ void showRoom(Room m[10][10], int x, int y) {
 			txt[6] = "This is your birthroom, empty and peace.";
 			txt[12] = "Go and defeat the boss!";
 			txt[18] = "Try not to die!";
+			break;
 		case 'B':
 			txt[6] = "This is the Boss room.";
 			txt[12] = "Press [F] to start the fight!";
 			txt[18] = "Good luck!";
+			break;
 		case 'M':
 			txt[6] = "This is a medium monster room.";
 			txt[12] = "Press [F] to start the fight!";
 			txt[18] = "Good luck!";
+			break;
 		case 'm':
 			txt[6] = "This is a weak monster room.";
 			txt[12] = "Press [F] to start the fight!";
 			txt[18] = "Good luck!";
+			break;
 		case 'A':
 			txt[6] = "This is an learning room.";
 			txt[12] = "Press [E] to learn a skill!";
 			txt[18] = "It may be powerful!";
+			break;
 		case 'H':
 			txt[6] = "This is the healing room.";
 			txt[12] = "Press [E] to heal up yourself";
 			txt[18] = "You can only use once in this room";
+			break;
 		}
 	}
 	else {
