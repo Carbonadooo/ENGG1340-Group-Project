@@ -115,7 +115,7 @@ void showMap(Room m[10][10], int level, int cx, int cy, bool& mapOpen) {
 				else if (t == '0')
 					cout << "|     |";
 			}
-			else cout << "|  ¡Ì  |";
+			else cout << "|  O  |";
 		}//second layer
 		cout << endl;
 		for (int j = 0; j < 10; ++j) {
