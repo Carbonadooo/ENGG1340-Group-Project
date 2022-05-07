@@ -1,6 +1,7 @@
 // gcd.cpp 
 #include <iostream> 
 #include <string>
+#include <iomanip>
 #include "battle.h"
 #include <map>
 #include "structures.h"
