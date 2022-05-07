@@ -12,7 +12,7 @@
 #include <termio.h>
 using namespace std;
 
-int getch(void)
+int _getch(void)
 {
     struct termios tm, tm_old;
     int fd = 0, char;
