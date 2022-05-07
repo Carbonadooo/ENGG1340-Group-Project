@@ -30,7 +30,7 @@ using namespace std;
 map<string, Ability> skills; //store player's ablity
 map<string, Monster> enemy; //store enemy's data
 
-bool battle(Hero& Ian, bool boss, string Curskills[4]) { //return 0: player died, return 1: player won
+bool battle(Hero& Ian, bool boss, string Curskills[4],map<string, Ability> skills ,map<string, Monster> enemy ) { //return 0: player died, return 1: player won
 	srand(time(NULL));
 	int PP[4];
 	for (int i = 0; i < 4; i++) {
