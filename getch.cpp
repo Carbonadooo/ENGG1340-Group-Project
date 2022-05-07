@@ -1,6 +1,7 @@
 #include"getch.h"
 #include<iostream>
 #include<unistd.h>
+#include<termio.h>
 using namespace std;
 
 int _getch(void)
