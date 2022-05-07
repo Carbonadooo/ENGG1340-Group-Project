@@ -1,5 +1,5 @@
 Zombie  20 3 NA NA
-ghoul 15 3 NA NA
+Ghoul 15 3 NA NA
 Skeleton 15 8 NA NA
 Webspinner 1 8 NA NA
 Hyena 10 8 NA NA
